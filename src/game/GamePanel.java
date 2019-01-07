@@ -1,6 +1,7 @@
 package game;
 
 
+import game.Enemy.Enemy;
 import tklibs.SpriteUtils;
 
 import javax.swing.*;
@@ -14,6 +15,12 @@ public class GamePanel extends JPanel {
     public GamePanel(){
           new BackGround();
           new Player();
+          Enemy enemy = new Enemy();
+          enemy.position.set(100,-50);
+          Enemy enemy1 = new Enemy();
+          enemy1.position.set(200,-30);
+          Enemy enemy2 = new Enemy();
+          enemy2.position.set(300,-35);
     }
 
     public void gameLoop() {

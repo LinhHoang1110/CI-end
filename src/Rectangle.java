@@ -10,18 +10,38 @@ public class Rectangle {
         this.width = width;
         this.height = height;
     }
+    public float top(){
+        return this.position.y;
+    }
+
+    public float bot(){
+        return this.top() + this.height;
+    }
+
+    public float left(){
+        return this.position.x;
+    }
+
+    public float right(){
+        return this.left() + this.width;
+    }
 
     public boolean intersected(Rectangle other){
         //TODO: kiem tra giao nhau giua hinh "this" vs "other"
-         float distance =(float)Math.sqrt((other.position.x -this.position.x)*(other.position.x -this.position.x) + (other.position.y -this.position.y)*(other.position.y -this.position.y));
-         float s1 =(float)Math.sqrt(this.width * this.width + this.height*this.height);
-         float s2 =(float)Math.sqrt(other.width * other.width + other.height*other.height);
-         if(distance > s1 || distance > s2){
-             return false;
-         }
-         else {
-             return true;
-         }
+//         float distance =(float)Math.sqrt((other.position.x -this.position.x)*(other.position.x -this.position.x) + (other.position.y -this.position.y)*(other.position.y -this.position.y));
+//         float s1 =(float)Math.sqrt(this.width * this.width + this.height*this.height);
+//         float s2 =(float)Math.sqrt(other.width * other.width + other.height*other.height);
+//         if(distance > s1 || distance > s2){
+//             return false;
+//         }
+//         else {
+//             return true;
+//         }
+        return     this.top() <= other.bot()
+                && this.bot() >= other.top()
+                && this.right() >= other.left()
+                && this.left() <= other.right();
+
     }
 
     public static void main(String[] args) {

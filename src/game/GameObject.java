@@ -1,5 +1,7 @@
 package game;
 
+import game.renderer.Renderer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -31,9 +33,9 @@ public class GameObject {
     }
 
     // định nghĩa đối tượng
-    BufferedImage image;
-    Vector2D position;
-    Vector2D velocity;// vận tốc của đối tượng
+    public Renderer renderer;
+    public Vector2D position;
+    public Vector2D velocity;// vận tốc của đối tượng
 
     public GameObject(){ //ham tao rong
         this.position = new Vector2D();
@@ -46,11 +48,8 @@ public class GameObject {
     }
 
     public void render(Graphics g){
-        if(this.image != null){
-            g.drawImage(this.image
-                    , (int)this.position.x
-                    , (int)this.position.y
-                    , null);
+        if(this.renderer != null) {
+            this.renderer.render(g, this);
         }
     }
 }
