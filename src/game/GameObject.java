@@ -1,9 +1,10 @@
 package game;
 
+import physics.BoxColider;
 import game.renderer.Renderer;
+import physics.Physics;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class GameObject {
@@ -21,25 +22,44 @@ public class GameObject {
     public static void runAll(){
         for(int i = 0; i<gameObjects.size(); i++){
             GameObject object = gameObjects.get(i);
-            object.run();
+            if (object.isActive){
+                object.run();
+            }
         }
     }
 
     public static void renderAll(Graphics g){
         for (int i =0; i < gameObjects.size();i++){
             GameObject object = gameObjects.get(i);
-            object.render(g);
+            if(object.isActive){
+                object.render(g);
+            }
         }
+    }
+
+    public static <E extends GameObject> E findIntersect(Class<E> cls, BoxColider boxColider){
+        for (int i=0; i < gameObjects.size(); i++){
+            GameObject object = gameObjects.get(i);
+            if (cls.isAssignableFrom(object.getClass())
+                && object instanceof Physics
+                && ((Physics) object).getBoxColider().intersected(boxColider)
+                && object.isActive){
+                    return (E) object;
+            }
+        }
+        return null;
     }
 
     // định nghĩa đối tượng
     public Renderer renderer;
     public Vector2D position;
     public Vector2D velocity;// vận tốc của đối tượng
+    public boolean isActive;
 
     public GameObject(){ //ham tao rong
         this.position = new Vector2D();
         this.velocity = new Vector2D();
+        isActive = true;
         this.addNew(this); // cứ tạo mới là cho gameObject vào hàm quản lý
     }
 
@@ -51,5 +71,8 @@ public class GameObject {
         if(this.renderer != null) {
             this.renderer.render(g, this);
         }
+    }
+    public void deActive(){
+        this.isActive = false;
     }
 }

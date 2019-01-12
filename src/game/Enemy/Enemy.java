@@ -1,13 +1,20 @@
 package game.Enemy;
 
+import game.FrameCounter;
+import game.PlayerBullet;
+import physics.BoxColider;
+import physics.Physics;
 import game.GameObject;
 import game.renderer.Animation;
 import tklibs.SpriteUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Enemy extends GameObject {
+public class Enemy extends GameObject implements Physics {
+    BoxColider boxColider;
+    FrameCounter fireCounter;
     public Enemy(){
         ArrayList<BufferedImage> images = new ArrayList<>();
         images.add(SpriteUtils.loadImage("assets/images/enemies/level0/pink/0.png"));
@@ -15,7 +22,9 @@ public class Enemy extends GameObject {
         images.add(SpriteUtils.loadImage("assets/images/enemies/level0/pink/2.png"));
         images.add(SpriteUtils.loadImage("assets/images/enemies/level0/pink/3.png"));
         this.renderer = new Animation(images);
-        this.velocity.set(0,2);
+        this.velocity.set(0,1);
+        this.boxColider = new BoxColider(this.position,30,30);
+        this.fireCounter = new FrameCounter(20);
     }
 
     @Override
@@ -24,19 +33,22 @@ public class Enemy extends GameObject {
         this.fire();
     }
 
-    int count; // TODO: continue editing
     private void fire() {
-        this.count++;
-        if (this.count > 20) {
-            float startAngle = (float)Math.PI / 4;
-            float endAngle = 3 * (float)Math.PI / 4;
-            float offset =(endAngle - startAngle)/4;
-            for(int i =0; i<5; i++){
+        if (fireCounter.run()) {
+//            float startAngle = (float)Math.PI / 4;
+//            float endAngle = 3 * (float)Math.PI / 4;
+//            float offset =(endAngle - startAngle)/4;
+//            for(int i =0; i<5; i++){
                 EnemyBullet bullet = new EnemyBullet();
                 bullet.position.set(this.position.x , this.position.y);
-                bullet.velocity.setAngle(startAngle + offset*i);
-                this.count=0;
+//                bullet.velocity.setAngle(startAngle + offset*i);
+                this.fireCounter.reset();
             }
         }
+//    }
+    public void takeDamage(int damage){}
+    @Override
+    public BoxColider getBoxColider() {
+        return this.boxColider;
     }
 }

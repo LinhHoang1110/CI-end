@@ -1,6 +1,7 @@
 package game;
 
 import game.renderer.Animation;
+import physics.BoxColider;
 import tklibs.SpriteUtils;
 
 import java.awt.*;
@@ -8,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Sphere extends GameObject {
+    BoxColider boxColider;
 
     public Sphere(){
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -15,6 +17,7 @@ public class Sphere extends GameObject {
         images.add(SpriteUtils.loadImage("assets/images/sphere/1.png"));
         images.add(SpriteUtils.loadImage("assets/images/sphere/2.png"));
         images.add(SpriteUtils.loadImage("assets/images/sphere/3.png"));
+        this.boxColider = new BoxColider(this.position, 16,16);
         this.renderer = new Animation(images);
     }
 
@@ -23,6 +26,7 @@ public class Sphere extends GameObject {
         super.run();
         this.fire();
     }
+
 
     int count; // TODO: continue editing
     private void fire() {
@@ -33,5 +37,7 @@ public class Sphere extends GameObject {
             this.count = 0;
         }
     }
-
+    public BoxColider getBoxColider(){
+        return this.boxColider;
+    }
 }
