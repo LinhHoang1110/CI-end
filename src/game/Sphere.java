@@ -17,7 +17,7 @@ public class Sphere extends GameObject {
         images.add(SpriteUtils.loadImage("assets/images/sphere/1.png"));
         images.add(SpriteUtils.loadImage("assets/images/sphere/2.png"));
         images.add(SpriteUtils.loadImage("assets/images/sphere/3.png"));
-        this.boxColider = new BoxColider(this.position, 16,16);
+        this.boxColider = new BoxColider(this, 16,16);
         this.renderer = new Animation(images);
     }
 
@@ -32,7 +32,7 @@ public class Sphere extends GameObject {
     private void fire() {
         this.count++;
         if(this.count > 20) {
-            SphereBullet bullet = new SphereBullet();
+            SphereBullet bullet = GameObject.recycle(SphereBullet.class);
             bullet.position.set(this.position);
             this.count = 0;
         }

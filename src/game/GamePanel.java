@@ -13,14 +13,14 @@ public class GamePanel extends JPanel {
 
 
     public GamePanel(){
-          new BackGround();
-          new Player();
-          Enemy enemy = new Enemy();
-          enemy.position.set(100,-50);
-          Enemy enemy1 = new Enemy();
-          enemy1.position.set(200,-30);
-          Enemy enemy2 = new Enemy();
-          enemy2.position.set(300,-35);
+//          new BackGround();
+//          new Player();
+//          Enemy enemy = new Enemy();
+//          enemy.position.set(100,-50);
+        GameObject.recycle(BackGround.class);
+        GameObject.recycle(Player.class);
+        Enemy enemy = GameObject.recycle(Enemy.class);
+        enemy.position.set(100,200);
     }
 
     public void gameLoop() {

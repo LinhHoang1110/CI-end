@@ -17,6 +17,8 @@ public class Player extends GameObject implements Physics {
     BoxColider boxColider;
     FrameCounter fireCounter;
     int hp;
+    boolean immune; //bat tu
+
 
     public Player(){
         super();
@@ -33,9 +35,10 @@ public class Player extends GameObject implements Physics {
         this.sphereLeft = new Sphere();
         this.sphereRight = new Sphere();
         this.updateSherePosition();
-        this.boxColider = new BoxColider(this.position,32,48);
+        this.boxColider = new BoxColider(this,32,48);
         this.fireCounter = new FrameCounter(20);
         this.hp = 3;
+        this.immune = false;
     }
 
 
@@ -46,25 +49,29 @@ public class Player extends GameObject implements Physics {
         this.limitPosition();
         this.fire();
         this.updateSherePosition();
+        this.checkImmune();
     }
 
-    public void takeDamage(int damage){
-        this.hp -= damage;
-        if(this.hp <= 0){
-            this.deActive();
-            this.sphereLeft.deActive();
-            this.sphereRight.deActive();
+    int immuneCount;
+    private void checkImmune() {
+        if(this.immune){
+            this.immuneCount++;
+            if(this.immuneCount > 60){
+                this.immune = false;
+                this.immuneCount =0;
+            }
         }
     }
 
+
     private void updateSherePosition() {
-        this.sphereLeft.position.set(this.position).add(-20,30);
-        this.sphereRight.position.set(this.position).add(30,30);
+        this.sphereLeft.position.set(this.position).add(-30,15);
+        this.sphereRight.position.set(this.position).add(30,15);
     }
 
     private void limitPosition() {
         if(this.position.y < 0){
-            this.position.y =0;
+            this.position.y = 0 ;
         }
         if(this.position.y >600 - 48)
         {
@@ -72,7 +79,7 @@ public class Player extends GameObject implements Physics {
         }
         if(this.position.x <0)
         {
-            this.position.x =0;
+            this.position.x = 0;
         }
         if(this.position.x > 384 - 32)
         {
@@ -87,7 +94,7 @@ public class Player extends GameObject implements Physics {
                 float endAngle = - 3 * (float)Math.PI / 4;
                 float offset =(endAngle - startAngle)/4;
                 for(int i =0; i<5; i++){
-                    PlayerBullet bullet = new PlayerBullet();
+                    PlayerBullet bullet = GameObject.recycle(PlayerBullet.class);
                     bullet.position.set(this.position.x -15, this.position.y);
                     bullet.velocity.setAngle(startAngle + offset*i);
                     this.fireCounter.reset();
@@ -112,6 +119,39 @@ public class Player extends GameObject implements Physics {
             vX = 5;
         }
         this.velocity.set(vX,vY).setLength(5);
+    }
+
+    public void takeDamage(int damage){
+        if(this.immune){
+            return;
+        }
+        this.hp -= damage;
+        if(this.hp <= 0){
+            this.hp = 0;
+            this.deActive();
+            this.sphereLeft.deActive();
+            this.sphereRight.deActive();
+        }
+        else {
+            this.immune = true;
+        }
+    }
+
+    int count;
+    @Override
+    public void render(Graphics g) {
+        if(this.immune){
+            //nhay nhay
+            this.count++;
+            if(this.count > 2){
+                super.render(g);
+                this.count = 0;
+            }
+        }
+        else{
+            super.render(g);
+        }
+
     }
 
     @Override

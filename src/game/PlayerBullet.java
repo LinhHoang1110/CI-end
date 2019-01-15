@@ -20,7 +20,7 @@ public class PlayerBullet extends GameObject {
         images.add(SpriteUtils.loadImage("assets/images/player-bullets/a/3.png"));
         this.renderer = new Animation(images, 0);
         this.velocity.set(0,-7);
-        this.boxColider = new BoxColider(this.position, 30,30);
+        this.boxColider = new BoxColider(this, 30,30);
     }
 
     @Override
@@ -28,8 +28,14 @@ public class PlayerBullet extends GameObject {
         super.run();
         Enemy enemy = GameObject.findIntersect(Enemy.class, this.boxColider);
         if(enemy != null){
-            System.out.println("hit");
             enemy.deActive();
+        }
+        this.deactiveIfNeeded();
+    }
+
+    private void deactiveIfNeeded() {
+        if(this.position.y < -100){
+            this.deActive();
         }
     }
 

@@ -14,12 +14,15 @@ public class BackGround extends GameObject {
         this.renderer = new SingleImageRenderer(image);
         this.position.set(0, 600 - image.getHeight());
         this.velocity.set(0,1);
+        this.anchor.set(0,0);
     }
 
     @Override
     public void run(){
         super.run();
-        // TODO: gioi han di chuyen cho background
+        if(this.position.y >= 0){
+            this.position.y = -0.5f;
+        }
         }
     }
 
