@@ -12,16 +12,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Food_boom extends Food {
-    BoxColider boxColider;
 
     public Food_boom(){
-        BufferedImage image = SpriteUtils.loadImage("");
+        super();
+        BufferedImage image = SpriteUtils.loadImage("assets/images/pixel-fruit-orange-16x16.png");
         this.renderer = new SingleImageRenderer(image);
         this.boxColider = new BoxColider(this, 16,16);
+        this.position.set(200,150);
     }
 
-    @Override
-    public void run() {
-        super.run();
-    }
 }

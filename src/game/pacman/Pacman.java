@@ -10,28 +10,33 @@ import java.awt.image.BufferedImage;
 
 public class Pacman extends GameObject implements Physics {
     BoxColider boxColider;
-    FrameCounter effectCounter;
+    FrameCounter bulleteffectCounter;
     boolean isFiring = false;
     boolean isBurning = false;
-    boolean isShielding = false;
+    public boolean isShielding = false;
     boolean isBooming = false;
     FrameCounter effectTime;
+    FrameCounter boomEffectCounter;
+    FrameCounter burnEffectCounter;
+    FrameCounter shieldEffectCounter;
     boolean isFacingRight;
     boolean isFacingUp;
     boolean isFacingLeft;
     boolean isFacingDown;
-    boolean[] way = new boolean[]{false,false,false,false};//up down left right
-
+    boolean[] way = new boolean[]{false, false, false, false};//up down left right
+    Shield shield;
 
     public Pacman() {
         super();
         this.renderer = new PacmanRenderer();
         this.position.set(200, 200);
         this.boxColider = new BoxColider(this, 16, 16);
-        this.effectCounter = new FrameCounter(60);
+        this.bulleteffectCounter = new FrameCounter(20);
         this.effectTime = new FrameCounter(300);
+        this.boomEffectCounter = new FrameCounter(100);
+        this.burnEffectCounter = new FrameCounter(50);
+        this.shieldEffectCounter = new FrameCounter(300);
     }
-
 
     @Override
     public void run() {
@@ -41,12 +46,18 @@ public class Pacman extends GameObject implements Physics {
         this.eat();
         this.burn();
         this.boom();
-        this.shield();
+        this.checkShield();
     }
 
+    private void checkShield() {
+        if(this.isShielding && this.shieldEffectCounter.run()) {
+            this.shield.deActive();
+            this.isShielding = false;
+        }
+    }
 
     private void fire() {
-        if (effectCounter.run()) {
+        if (bulleteffectCounter.run()) {
             if (isFiring && GameWindow.isEffectPress) {
                 Bullet bullet = GameObject.recycle(Bullet.class);
                 bullet.position.set(this.position);
@@ -60,8 +71,8 @@ public class Pacman extends GameObject implements Physics {
                 } else if (this.way[3]) {
                     bullet.velocity.set(1, 0);
                 }
+                bulleteffectCounter.reset();
             }
-            effectCounter.reset();
         }
         if (isFiring) {
             if (effectTime.run()) {
@@ -73,11 +84,21 @@ public class Pacman extends GameObject implements Physics {
 
 
     private void burn() {
-        if (effectCounter.run()) {
+        if (burnEffectCounter.run()) {
             if (isBurning && GameWindow.isEffectPress) {
                 Fire fire = GameObject.recycle(Fire.class);
-                fire.position.set(this.position.x, this.position.y);
-                this.effectCounter.reset();
+                fire.position.set(this.position);
+                fire.startPosition.set(this.position);
+                if (this.way[0]) {
+                    fire.velocity.set(0, -1);
+                } else if (this.way[1]) {
+                    fire.velocity.set(0, 1);
+                } else if (this.way[2]) {
+                    fire.velocity.set(-1, 0);
+                } else if (this.way[3]) {
+                    fire.velocity.set(1, 0);
+                }
+                burnEffectCounter.reset();
             }
         }
         if (isBurning) {
@@ -89,32 +110,27 @@ public class Pacman extends GameObject implements Physics {
     }
 
     private void boom() {
-        if (effectCounter.run()) {
+        if (boomEffectCounter.run()) {
             if (isBooming && GameWindow.isEffectPress) {
                 Boom boom = GameObject.recycle(Boom.class);
-                boom.position.set(this.position.x, this.position.y);
-                this.effectCounter.reset();
+                boom.position.set(this.position);
+                boom.startPosition.set(this.position);
+                if (this.way[0]) {
+                    boom.velocity.set(0, -1);
+                } else if (this.way[1]) {
+                    boom.velocity.set(0, 1);
+                } else if (this.way[2]) {
+                    boom.velocity.set(-1, 0);
+                } else if (this.way[3]) {
+                    boom.velocity.set(1, 0);
+                }
+                boomEffectCounter.reset();
             }
         }
+
         if (isBooming) {
             if (effectTime.run()) {
                 isBooming = false;
-                effectTime.reset();
-            }
-        }
-    }
-
-    private void shield() {
-        if (effectCounter.run()) {
-            if (isShielding && GameWindow.isEffectPress) {
-                Shield shield = GameObject.recycle(Shield.class);
-                shield.position.set(this.position.x, this.position.y);
-                this.effectCounter.reset();
-            }
-        }
-        if (isShielding) {
-            if (effectTime.run()) {
-                isShielding = false;
                 effectTime.reset();
             }
         }
@@ -136,13 +152,16 @@ public class Pacman extends GameObject implements Physics {
             foodBoom.deActive();
             isBooming = true;
         }
+
         Food_shield foodShield = GameObject.findIntersect(Food_shield.class, this.boxColider);
         if (foodShield != null) {
             foodShield.deActive();
-            isShielding = true;
+            this.shield = GameObject.recycle(Shield.class);
+            shield.pacman = this;
+            this.isShielding = true;
+            this.shieldEffectCounter.reset();
         }
     }
-
 
     private void move() {
         float vX = 0;
@@ -150,19 +169,19 @@ public class Pacman extends GameObject implements Physics {
 
         if (GameWindow.isUpPress) {
             vY = -5;
-            way = new boolean[]{true,false,false,false};
+            way = new boolean[]{true, false, false, false};
         }
         if (GameWindow.isDownPress) {
             vY = 5;
-            way = new boolean[]{false,true,false,false};
+            way = new boolean[]{false, true, false, false};
         }
         if (GameWindow.isLeftPress) {
             vX = -5;
-            way = new boolean[]{false,false,true,false};
+            way = new boolean[]{false, false, true, false};
         }
         if (GameWindow.isRightPress) {
             vX = 5;
-            way = new boolean[]{false,false,false,true};
+            way = new boolean[]{false, false, false, true};
         }
         this.velocity.set(vX, vY).setLength(3);
     }

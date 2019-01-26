@@ -14,7 +14,7 @@ public class Animation extends Renderer {
     public Animation(ArrayList<BufferedImage> images){
         this.images = images;
         this.currentImageIndex = 0;
-        this.nextImageCount = 6;
+        this.nextImageCount = 0;
     }
     public Animation(ArrayList<BufferedImage> images, int nextImageCount){
         this.images = images;

@@ -3,8 +3,10 @@ package game;
 
 
 
+import game.food.Food_boom;
 import game.food.Food_bullet;
 import game.food.Food_fire;
+import game.food.Food_shield;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,8 @@ public class GamePanel extends JPanel {
         GameObject.recycle(BackGround.class);
         GameObject.recycle(Pacman.class);
         GameObject.recycle(Food_bullet.class);
+        GameObject.recycle(Food_boom.class);
+        GameObject.recycle(Food_shield.class);
         GameObject.recycle(Food_fire.class);
     }
 

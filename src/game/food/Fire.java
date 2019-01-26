@@ -1,24 +1,33 @@
 package game.food;
 
+import game.food_renderer.FlameRenderer;
 import game.GameObject;
-import game.renderer.Animation;
+import game.Vector2D;
 import physics.BoxColider;
-import physics.Physics;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
-public class Fire extends GameObject implements Physics {
+public class Fire extends GameObject {
     BoxColider boxColider;
+    public Vector2D startPosition;
 
-    public Fire(){
-        ArrayList<BufferedImage> images = new ArrayList<>();
-        this.renderer = new Animation(images);
+    public Fire() {
+//        ArrayList<BufferedImage> images = new ArrayList<>();
+//        images.add(SpriteUtils.loadImage("assets/images/flame/flame.png"));
+//        images.add(SpriteUtils.loadImage("assets/images/flame/flame2.png"));
+//        images.add(SpriteUtils.loadImage("assets/images/flame/flame3.png"));
+//        this.renderer = new Animation(images);
+        this.renderer = new FlameRenderer();
+        this.startPosition = new Vector2D();
+        this.velocity.set(0, 0);
     }
 
     @Override
-    public BoxColider getBoxColider() {
-        return this.boxColider;
+    public void run() {
+        super.run();
+        float distance = startPosition.clone().substract(this.position.x,this.position.y).getLength();
+        if(distance > 100){
+            this.deActive();
+        }
     }
 }
+
+

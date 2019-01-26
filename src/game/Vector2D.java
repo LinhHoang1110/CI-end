@@ -45,6 +45,16 @@ public class Vector2D {
         return this;
     }
 
+    public Vector2D setBetween(){
+        if(this.x != 0 && this.y == 0){
+            this.x = - this.x;
+        }
+        else if(this.y != 0 && this.x == 0){
+            this.y = -this.y;
+        }
+        return this;
+    }
+
     public Vector2D set(float x, float y) {
         this.x = x;
         this.y = y;

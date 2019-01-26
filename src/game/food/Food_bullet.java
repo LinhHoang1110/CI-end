@@ -1,11 +1,13 @@
 package game.food;
 
 import game.renderer.SingleImageRenderer;
+import physics.Physics;
 import tklibs.SpriteUtils;
 
 import java.awt.image.BufferedImage;
 
 public class Food_bullet extends Food {
+
 
     public Food_bullet() {
         super();
