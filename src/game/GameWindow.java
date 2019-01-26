@@ -14,9 +14,9 @@ public class GameWindow extends JFrame {
     public static boolean isDownPress;
     public static boolean isRightPress;
     public static boolean isLeftPress;
-    public static boolean isFirePress;
+    public static boolean isEffectPress;
 
-    public GameWindow(){
+    public GameWindow() {
         this.setupWindow();
         this.createGamePanel();
         this.setupListner();
@@ -28,40 +28,40 @@ public class GameWindow extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 //TODO: giữ phím
-                if(e.getKeyCode() == KeyEvent.VK_W){
+                if (e.getKeyCode() == KeyEvent.VK_W) {
                     isUpPress = true;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_S){
+                if (e.getKeyCode() == KeyEvent.VK_S) {
                     isDownPress = true;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_A){
+                if (e.getKeyCode() == KeyEvent.VK_A) {
                     isLeftPress = true;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_D){
+                if (e.getKeyCode() == KeyEvent.VK_D) {
                     isRightPress = true;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_SPACE){
-                    isFirePress = true;
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    isEffectPress = true;
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 //TODO: nhả phím
-                if(e.getKeyCode() == KeyEvent.VK_W){
+                if (e.getKeyCode() == KeyEvent.VK_W) {
                     isUpPress = false;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_S){
+                if (e.getKeyCode() == KeyEvent.VK_S) {
                     isDownPress = false;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_A){
+                if (e.getKeyCode() == KeyEvent.VK_A) {
                     isLeftPress = false;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_D){
+                if (e.getKeyCode() == KeyEvent.VK_D) {
                     isRightPress = false;
                 }
-                if(e.getKeyCode() == KeyEvent.VK_SPACE){
-                    isFirePress = false;
+                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    isEffectPress = false;
                 }
             }
         });
@@ -70,7 +70,7 @@ public class GameWindow extends JFrame {
     private void createGamePanel() {
 //        GamePanel panel = new GamePanel();//tạo khung
         this.gamePanel = new GamePanel();
-        this.gamePanel.setPreferredSize(new Dimension(800,600));
+        this.gamePanel.setPreferredSize(new Dimension(Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT));
         this.add(this.gamePanel);
         this.pack();// tự động window nở ra để phù hợp với panel bên trong va
         // muốn pack được thì phải có setPreferredSize

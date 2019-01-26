@@ -11,29 +11,28 @@ public class GameObject {
     //static: quản lý
     public static ArrayList<GameObject> gameObjects = new ArrayList<>();
 
-    public static void addNew(GameObject object){
+    public static void addNew(GameObject object) {
         gameObjects.add(object);
     }
 
     /**
      * dùng lại GameObject
+     *
      * @param cls
      * @param <E>
      * @return
      */
-    public static <E extends GameObject> E recycle(Class<E> cls){
+    public static <E extends GameObject> E recycle(Class<E> cls) {
         //1. findInactive > reset > return
         //2. if can not findInactive > create new > return
         E object = findInactive(cls);
-        if(object != null){
+        if (object != null) {
             object.reset();
             return object;
-        }
-        else {
-            try{
+        } else {
+            try {
                 return cls.getConstructor().newInstance(); //  giống new E()
-            }
-            catch(Exception ex){
+            } catch (Exception ex) {
                 return null;
             }
         }
@@ -43,43 +42,43 @@ public class GameObject {
         for (int i = 0; i < gameObjects.size(); i++) {
             GameObject object = gameObjects.get(i);
             if (!object.isActive
-                && cls.isAssignableFrom(object.getClass())) {
+                    && cls.isAssignableFrom(object.getClass())) {
                 return (E) object;
             }
         }
         return null;
     }
 
-    public static void clearAll(){
+    public static void clearAll() {
         gameObjects.clear();
     }
 
-    public static void runAll(){
-        for(int i = 0; i<gameObjects.size(); i++){
+    public static void runAll() {
+        for (int i = 0; i < gameObjects.size(); i++) {
             GameObject object = gameObjects.get(i);
-            if (object.isActive){
+            if (object.isActive) {
                 object.run();
             }
         }
     }
 
-    public static void renderAll(Graphics g){
-        for (int i =0; i < gameObjects.size();i++){
+    public static void renderAll(Graphics g) {
+        for (int i = 0; i < gameObjects.size(); i++) {
             GameObject object = gameObjects.get(i);
-            if(object.isActive){
+            if (object.isActive) {
                 object.render(g);
             }
         }
     }
 
-    public static <E extends GameObject> E findIntersect(Class<E> cls, BoxColider boxColider){
-        for (int i=0; i < gameObjects.size(); i++){
+    public static <E extends GameObject> E findIntersect(Class<E> cls, BoxColider boxColider) {
+        for (int i = 0; i < gameObjects.size(); i++) {
             GameObject object = gameObjects.get(i);
             if (cls.isAssignableFrom(object.getClass())
-                && object instanceof Physics
-                && ((Physics) object).getBoxColider().intersected(boxColider)
-                && object.isActive){
-                    return (E) object;
+                    && object instanceof Physics
+                    && ((Physics) object).getBoxColider().intersected(boxColider)
+                    && object.isActive) {
+                return (E) object;
             }
         }
         return null;
@@ -92,28 +91,29 @@ public class GameObject {
     public boolean isActive;
     public Vector2D anchor;
 
-    public GameObject(){ //ham tao rong
+    public GameObject() { //ham tao rong
         this.position = new Vector2D();
         this.velocity = new Vector2D();
-        this.anchor = new Vector2D(0.5f,0.5f);
+        this.anchor = new Vector2D(0.5f, 0.5f);
         isActive = true;
         this.addNew(this); // cứ tạo mới là cho gameObject vào hàm quản lý
     }
 
-    public void run(){
+    public void run() {
         this.position.add(this.velocity);
     }
 
-    public void render(Graphics g){
-        if(this.renderer != null) {
+    public void render(Graphics g) {
+        if (this.renderer != null) {
             this.renderer.render(g, this);
         }
     }
-    public void deActive(){
+
+    public void deActive() {
         this.isActive = false;
     }
 
-    public void reset(){
+    public void reset() {
         this.isActive = true;
     }
 }
